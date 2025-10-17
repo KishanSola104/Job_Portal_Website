@@ -1,0 +1,262 @@
+/* Footer Overall */
+footer {
+    width: 100%;
+    background-color: #fff; /* all sections white */
+    font-family: Arial, sans-serif;
+}
+
+/* ---------------- Footer One: Contact Us Form ---------------- */
+.footer-one.contact-us {
+    padding: 60px 20px;
+}
+
+.contact-us-container {
+    max-width: 650px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.contact-us-container h3 {
+    font-size: 32px;
+    color: #0073b1;
+    margin-bottom: 15px;
+}
+
+.contact-us-container p {
+    font-size: 16px;
+    color: #004080;
+    margin-bottom: 35px;
+}
+
+.contact-form .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.contact-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #0073b1;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #8e9599;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #2d3944;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+    color: #272e31;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: #0180ff;
+    box-shadow: 0 0 8px rgba(4, 99, 150, 0.3);
+    outline: none;
+}
+
+.contact-form textarea {
+    resize: none;
+    min-height: 120px;
+}
+
+.contact-form .submit-btn {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.contact-form .btn-primary {
+    background-color: #0073b1;
+    color: #fff;
+    border: none;
+    padding: 18px 60px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    display: inline-block;
+    min-width: 220px;
+}
+
+.contact-form .btn-primary:hover {
+    background-color: #004080;
+    transform: translateY(-2px);
+}
+
+/* Responsive Footer One */
+@media (max-width: 768px) {
+    .contact-us-container {
+        padding: 0 15px;
+    }
+    .contact-form .btn-primary {
+        width: 100%;
+        padding: 18px 0;
+    }
+}
+
+/* ---------------- Footer Two: Logo, Links, Social ---------------- */
+.footer-two {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.footer-separator {
+    width: 80%;
+    height: 2px;
+    margin: 0 auto 40px auto;
+    border: none;
+    background: linear-gradient(to right, #00a0dc, #0073b1);
+    border-radius: 2px;
+}
+
+.footer-two-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 30px;
+    text-align: left;
+}
+
+.footer-column {
+    flex: 1; /* equal width columns */
+    min-width: 220px;
+}
+
+.footer-column.address img.footer-logo {
+    width: 150px;
+    margin-bottom: 15px;
+}
+
+.footer-column h4 {
+    color: #0073b1;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.footer-column p,
+.footer-column li,
+.footer-column a {
+    color: #004080;
+    font-size: 16px;
+    text-decoration: none;
+    line-height: 1.6;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin-bottom: 10px;
+}
+
+.footer-column ul li a:hover {
+    color: #00a0dc;
+}
+
+.footer-column .social-icons a {
+    display: inline-block;
+    margin-right: 15px;
+    font-size: 20px;
+    color: #004080;
+    transition: color 0.3s;
+}
+
+.footer-column .social-icons a:hover {
+    color: #00a0dc;
+}
+
+/* ---------------- HR between Footer 2 & 3 ---------------- */
+.footer-hr-70 {
+    width: 70%;
+    margin: 20px auto 10px auto;
+    border: none;
+    height: 2px;
+    background-color: #0073b1;
+}
+
+.footer-hr-90 {
+    width: 90%;
+    margin: 10px auto 30px auto;
+    border: none;
+    height: 2px;
+    background-color: #0c84af;
+}
+
+/* Responsive Footer Two */
+@media (max-width: 768px) {
+    .footer-two-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .footer-column {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+}
+
+/* ---------------- Footer Three ---------------- */
+.footer-three {
+    padding: 25px 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    color: #004080;
+}
+
+.footer-three p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.footer-three a {
+    color: #0073b1;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.footer-three a:hover {
+    color: #00a0dc;
+}
+
+
+/* Footer links underline effect */
+.footer-column a {
+    position: relative;
+    color: #004080;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-column a::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    left: 0;
+    bottom: -3px; /* spacing from text */
+    background-color: #00a0dc;
+    transition: width 0.3s ease-in-out;
+}
+
+.footer-column a:hover::after {
+    width: 100%;
+}
+
+/* Social icons hover (already existing, keep it) */
+.footer-column .social-icons a:hover {
+    color: #00a0dc;
+}

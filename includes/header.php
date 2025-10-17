@@ -18,7 +18,7 @@ if (!isset($page_title)) {
     <link rel="icon" type="image/png" href="assets/logos/favicon.png">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/header.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -133,6 +133,5 @@ mobileMenu.querySelectorAll('a').forEach(link=>{
         mobileMenu.classList.remove('active');
     });
 });
-
 
 </script>

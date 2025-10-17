@@ -16,8 +16,10 @@ include('includes/header.php');
     <!-- Main content -->
     <main> </main>
 
-    <?php 
+<?php 
     include('includes/footer.php');
-     ?>
+
+    
+?>
 
  
