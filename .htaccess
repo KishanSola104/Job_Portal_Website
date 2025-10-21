@@ -1,0 +1,51 @@
+# =====================================================
+# Enable Rewrite Engine
+# =====================================================
+RewriteEngine On
+RewriteBase /Job_Portal_Website/
+
+# =====================================================
+# Serve existing files and directories normally
+# =====================================================
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# =====================================================
+# Remove .php extension from URLs (internal rewrite)
+# Example: /about → about.php
+# =====================================================
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^([^/]+)/?$ $1.php [L]
+
+# =====================================================
+# Redirect explicit .php URLs to clean version
+# Example: /about.php → /about
+# =====================================================
+RewriteCond %{THE_REQUEST} \s/([^.]+)\.php[\s?] [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# =====================================================
+# Redirect index.php to root
+# =====================================================
+RewriteCond %{THE_REQUEST} /index\.php
+RewriteRule ^index\.php$ /Job_Portal_Website/ [R=301,L]
+
+# =====================================================
+# Default Directory Index
+# =====================================================
+DirectoryIndex index.php index.html
+
+# =====================================================
+# Security Settings
+# =====================================================
+Options -Indexes
+
+<FilesMatch "(\.env|config\.php|db_connect\.php|\.git)">
+    Require all denied
+</FilesMatch>
+
+<Files .htaccess>
+    Require all denied
+</Files>

@@ -1,0 +1,269 @@
+/* ---------------------------
+   Privacy Policy Styles
+--------------------------- */
+
+/* Privacy Policy Starts here */
+.privacy-main {
+    background: #fff;
+    color: #222;
+    font-family: "Poppins", sans-serif;
+    padding: 50px 20px;
+}
+
+.privacy-section .container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.privacy-section h1 {
+    color: #0056b3;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.privacy-section h2 {
+    color: #0056b3;
+    font-size: 1.8rem;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.privacy-section p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.privacy-section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.privacy-section ul li {
+    margin-bottom: 10px;
+}
+
+.privacy-section a {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.privacy-section a:hover {
+    color: #00aaff;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .privacy-main {
+        padding: 30px 15px;
+    }
+
+    .privacy-section h1 {
+        font-size: 2rem;
+    }
+
+    .privacy-section h2 {
+        font-size: 1.5rem;
+    }
+}
+
+
+/* Privacy Policy ends here */
+
+/* Terms and Conditions  css starts here*/
+/* ---------------------------
+   Terms & Conditions Styles
+--------------------------- */
+.terms-main {
+    background: #fff;
+    color: #222;
+    font-family: "Poppins", sans-serif;
+    padding: 50px 20px;
+}
+
+.terms-section .container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.terms-section h1 {
+    color: #0056b3;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.terms-section h2 {
+    color: #0056b3;
+    font-size: 1.8rem;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.terms-section p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.terms-section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.terms-section ul li {
+    margin-bottom: 10px;
+}
+
+.terms-section a {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.terms-section a:hover {
+    color: #00aaff;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .terms-main {
+        padding: 30px 15px;
+    }
+
+    .terms-section h1 {
+        font-size: 2rem;
+    }
+
+    .terms-section h2 {
+        font-size: 1.5rem;
+    }
+}
+/* Terms and Conditions  css ends here*/
+
+
+/* Equal Opportunities Policy */
+.equal-opportunities-section {
+  padding: 60px 20px;
+  background-color: #fff;
+  color: #222;
+}
+
+.equal-opportunities-section .container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.equal-opportunities-section .section-title {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 40px;
+  color: #0056b3;
+}
+
+.equal-opportunities-section .policy-intro {
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+.equal-opportunities-section .policy-text {
+  margin-bottom: 20px;
+  line-height: 1.7;
+  text-align: justify;
+}
+
+.equal-opportunities-section .policy-signoff {
+  margin-top: 40px;
+  font-weight: bold;
+  text-align: right;
+}
+
+/* end of equal opportunities policy */
+
+/* Modern slavery statement */
+.modern-slavery-section {
+  padding: 60px 20px;
+  background-color: #fff;
+  color: #222;
+}
+
+.modern-slavery-section .container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.modern-slavery-section .section-title {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 40px;
+  color: #0056b3;
+}
+
+.modern-slavery-section .policy-intro {
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+.modern-slavery-section .policy-text {
+  margin-bottom: 20px;
+  line-height: 1.7;
+  text-align: justify;
+}
+
+.modern-slavery-section .policy-list {
+  margin-left: 20px;
+  margin-bottom: 20px;
+  list-style: disc;
+  line-height: 1.7;
+}
+
+.modern-slavery-section .policy-signoff {
+  margin-top: 40px;
+  font-weight: bold;
+  text-align: right;
+}
+
+
+
+/* end of modern slavery statement */
+
+/* Ethical Trading Policy */
+.ethical-trading-section {
+  padding: 60px 20px;
+  background-color: #fff;
+  color: #222;
+}
+
+.ethical-trading-section .container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ethical-trading-section .section-title {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 40px;
+  color: #0056b3;
+}
+
+.ethical-trading-section .policy-intro {
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+.ethical-trading-section .policy-text {
+  margin-bottom: 20px;
+  line-height: 1.7;
+  text-align: justify;
+}
+
+.ethical-trading-section .policy-signoff {
+  margin-top: 40px;
+  font-weight: bold;
+  text-align: right;
+}

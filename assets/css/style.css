@@ -1,0 +1,711 @@
+/* ================= Hero Section ================= */
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    overflow: hidden;
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.hero-slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ================= Hero Text ================= */
+.hero-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.hero-lines {
+    position: absolute;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 80%; /* limit text width */
+    text-align: center;
+    opacity: 0;
+    transition: top 1s ease, opacity 1s ease;
+}
+
+/* Smaller first line */
+.hero-lines .line1 {
+    font-size: clamp(18px, 2vw, 28px); 
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 1.5px 1.5px 6px rgba(0,0,0,0.6);
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Larger second line */
+.hero-lines .line2 {
+     font-size: clamp(18px, 2vw, 28px); 
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 1.5px 1.5px 6px rgba(0,0,0,0.6);
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* ================= Indicators ================= */
+.hero-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 3;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.indicator.active {
+    background: #fff;
+}
+
+/* Hero section over */
+
+
+/* Start Of About Us Section */
+/* About Section */
+.about-section {
+    position: relative;
+    width: 100%;
+    padding: 80px 10%;
+    background: #fff;
+    overflow: hidden;
+}
+
+.about-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-part-about,
+.right-part-about {
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: transform 1s ease, opacity 1s ease;
+    flex: 1 1 45%;
+    max-width: 45%;
+}
+
+.left-part-about h2 {
+    font-size: clamp(28px, 3vw, 36px);
+    font-weight: 800;
+    margin-bottom: 25px;
+    color: #0056b3;
+}
+
+.left-part-about p {
+    font-size: clamp(16px, 1.5vw, 18px);
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.right-part-about img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* Animation class */
+.animate-in-left {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.animate-in-right {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* Responsive: Tablet */
+@media (max-width: 991px) {
+    .about-container {
+        flex-direction: column;
+        gap: 40px;
+    }
+    .left-part-about,
+    .right-part-about {
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+}
+
+/* Responsive: Mobile */
+@media (max-width: 767px) {
+    .about-section {
+        padding: 60px 5%;
+    }
+    .left-part-about h2 {
+        font-size: clamp(24px, 5vw, 30px);
+    }
+    .left-part-about p {
+        font-size: clamp(14px, 3vw, 16px);
+    }
+}
+
+
+/* End of About Section */
+
+
+
+
+
+
+
+
+
+/* ==========================
+   HOW WE WORK SECTION
+   (Modern, Elegant, Responsive)
+========================== */
+
+.how-we-work {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  color: #222;
+  padding: 100px 8%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.how-we-work .section-title {
+  font-size: 2.5rem;
+  color: #0056b3;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 70px;
+  position: relative;
+  display: inline-block;
+}
+
+.how-we-work .section-title::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: #0056b3;
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+/* Main layout */
+.work-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 60px;
+  position: relative;
+}
+
+/* Vertical Divider */
+.divider {
+  width: 3px;
+  background: linear-gradient(180deg, #0056b3 0%, #007bff 100%);
+  opacity: 0.4;
+  border-radius: 10px;
+}
+
+/* Text Blocks */
+.work-part {
+  flex: 1;
+  text-align: justify;
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.work-part:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 86, 179, 0.15);
+}
+
+.work-part p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+/* Animation (scroll-trigger style) */
+.animate {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 1s ease;
+}
+
+.animate.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .how-we-work {
+    padding: 80px 6%;
+  }
+
+  .work-container {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 900px) {
+  .work-container {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .divider {
+    display: none;
+  }
+
+  .work-part {
+    text-align: left;
+    padding: 35px 25px;
+  }
+}
+
+@media (max-width: 600px) {
+  .how-we-work .section-title {
+    font-size: 2rem;
+  }
+
+  .work-part p {
+    font-size: 0.95rem;
+  }
+}
+
+/* Optional: soft animated background elements (for subtle motion effect) */
+.how-we-work::before,
+.how-we-work::after {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: rgba(0, 86, 179, 0.08);
+  border-radius: 50%;
+  z-index: 0;
+  animation: float 8s ease-in-out infinite;
+}
+
+.how-we-work::before {
+  top: -80px;
+  left: -80px;
+}
+
+.how-we-work::after {
+  bottom: -80px;
+  right: -60px;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(20px) rotate(10deg); }
+}
+
+/*  End of How we work */
+
+
+
+/* Start of services section */
+/* =============================
+   🌟 GLOBAL SECTION STYLES
+============================= */
+.services-section,
+.job-roles-section {
+  background: #fff;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.section-title {
+  color: #0056b3;
+  font-size: 2.5rem;
+  margin-bottom: 50px;
+  font-weight: 600;
+}
+
+/* =============================
+   🧩 SERVICES SECTION
+============================= */
+.services-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.services-row,
+.extra-services-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+}
+
+.service-card {
+  position: relative;
+  width: 22%;
+  background: #f8f9fa;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.service-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  border-radius: 12px 12px 0 0;
+}
+
+.service-card h3 {
+  font-size: 1.1rem;
+  margin: 15px 0;
+  color: #222;
+}
+
+.service-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 86, 179, 0.9);
+  color: #fff;
+  padding: 15px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.service-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.service-card:hover .service-overlay {
+  transform: translateY(0);
+}
+
+/* Buttons */
+.services-buttons {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  
+}
+
+.btn {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid #0056b3;
+}
+
+.view-more-btn,
+.join-us-btn {
+  background: #0056b3;
+  color: #fff;
+  text-decoration: none;
+}
+
+.view-more-btn:hover,
+.join-us-btn:hover {
+  background: #003d80;
+  transform: scale(1.05);
+}
+
+/* =============================
+   👔 JOB ROLES SECTION
+============================= */
+.jobs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.jobs-row,
+.extra-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+}
+
+.job-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 15px;
+  width: 22%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.job-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.job-card h4 {
+  margin-top: 15px;
+  font-size: 1.1rem;
+  color: #222;
+}
+
+.job-card p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 8px;
+}
+
+.job-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Buttons */
+.job-buttons {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.job-buttons button {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 50px;
+  background: #0056b3;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.job-buttons button:hover {
+  background: #003d80;
+  transform: scale(1.05);
+}
+
+/* =============================
+   📱 RESPONSIVE DESIGN
+============================= */
+@media (max-width: 1024px) {
+  .service-card,
+  .job-card {
+    width: 30%;
+  }
+
+  .hide-tab {
+    display: none;
+  }
+
+  .view-more-btn {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 768px) {
+  .service-card,
+  .job-card {
+    width: 45%;
+  }
+
+  .hide-mob {
+    display: none;
+  }
+
+  .view-more-btn {
+    display: inline-block;
+  }
+}
+
+@media (min-width: 1025px) {
+  .view-more-btn {
+    display: none;
+  }
+}
+
+/* =============================
+   🎬 ENTRANCE ANIMATIONS
+============================= */
+.first-services-row,
+.second-services-row,
+.first-job-row,
+.second-job-row {
+  opacity: 0;
+  transition: all 1s ease-out;
+}
+
+/* Slide in from right (1st rows) */
+.first-services-row,
+.first-job-row {
+  transform: translateX(100px);
+}
+
+/* Slide in from left (2nd rows) */
+.second-services-row,
+.second-job-row {
+  transform: translateX(-100px);
+}
+
+/* When visible */
+.first-services-row.visible,
+.second-services-row.visible,
+.first-job-row.visible,
+.second-job-row.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Staggered cards animation */
+.service-card,
+.job-card {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease-out;
+}
+
+.visible .service-card,
+.visible .job-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hidden rows (View More) */
+.extra-services-row,
+.extra-row {
+  display: none;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.6s ease-out;
+}
+
+.extra-services-row.visible,
+.extra-row.visible {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Button hover lift effect */
+.btn:hover {
+  transform: translateY(-3px);
+}
+
+
+/* ==========================
+   ROW ENTRY ANIMATIONS
+========================== */
+.first-services-row,
+.second-services-row,
+.first-job-row,
+.second-job-row {
+  opacity: 0;
+  transform: translateX(0);
+  transition: all 0.8s ease;
+}
+
+.slide-in-right {
+  opacity: 1;
+  transform: translateX(0);
+  animation: fromRight 0.8s ease forwards;
+}
+
+.slide-in-left {
+  opacity: 1;
+  transform: translateX(0);
+  animation: fromLeft 0.8s ease forwards;
+}
+
+@keyframes fromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Card reveal */
+.service-card.visible,
+.job-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s ease;
+}
+
+.service-card,
+.job-card {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+html {
+  scroll-behavior: smooth;
+}
