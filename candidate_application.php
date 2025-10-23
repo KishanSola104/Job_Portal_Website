@@ -2,7 +2,7 @@
 // Start the session
 session_start();
 $page_title = "ANU Hospitality Staff Ltd - Candidate Application";
-include('includes/header.php');
+include('includes/application_header.php');
 ?>
 
 <main>
@@ -10,7 +10,8 @@ include('includes/header.php');
     <div class="candidate-container">
       <h2 class="candidate-title">Candidate Application Form</h2>
 
-      <form id="candidate-application-form" enctype="multipart/form-data">
+     <form id="candidate-application-form" enctype="multipart/form-data" action="candidate_submit.php" method="POST">
+
 
         <!-- PERSONAL DETAILS -->
         <div class="candidate-section">
@@ -60,14 +61,49 @@ include('includes/header.php');
 
             <div class="candidate-field">
               <label for="candidate-job">Job Role Applying For *</label>
-              <select id="candidate-job" name="job_role" required>
-                <option value="">Select a Job Role</option>
-                <option value="Housekeeping">Housekeeping</option>
-                <option value="Kitchen">Kitchen Porters & Chefs</option>
-                <option value="FrontDesk">Front of House & Reception Staff</option>
-                <option value="Security">Security Staff</option>
-                <option value="Event">Event & Banquet Staff</option>
-              </select>
+             <select id="candidate-job" name="job_role" required>
+  <option value="">Select a Job Role</option>
+
+  <optgroup label="Housekeeping & Maintenance">
+    <option value="Housekeeping">Housekeeping Staff</option>
+    <option value="HousekeepingSupervisor">Housekeeping Supervisor</option>
+    <option value="Laundry">Laundry Staff</option>
+    <option value="Maintenance">Maintenance / Facility Staff</option>
+  </optgroup>
+
+  <optgroup label="Front Office">
+    <option value="FrontDesk">Front of House & Reception Staff</option>
+    <option value="Receptionist">Receptionist / Front Office Assistant</option>
+    <option value="Concierge">Concierge</option>
+  </optgroup>
+
+  <optgroup label="Food & Beverage">
+    <option value="Kitchen">Kitchen Porters & Chefs</option>
+    <option value="ChefSpecialist">Specialist Chefs (Pastry, Indian, Continental)</option>
+    <option value="RestaurantService">Restaurant / Wait Staff</option>
+    <option value="BarStaff">Bar Staff / Bartender</option>
+    <option value="RoomService">Room Service Attendant</option>
+  </optgroup>
+
+  <optgroup label="Events & Security">
+    <option value="Event">Event & Banquet Staff</option>
+    <option value="EventCoordinator">Event Coordinator</option>
+    <option value="Security">Security Staff</option>
+  </optgroup>
+
+  <optgroup label="Management & Administration">
+    <option value="HotelManagement">Hotel Management Trainee</option>
+    <option value="AdminStaff">Administrative Staff</option>
+    <option value="HR">Human Resources Assistant</option>
+    <option value="Marketing">Marketing & Sales Assistant</option>
+    </optgroup>
+
+    <optgroup label="Other Roles">
+      <option value="Other">Other</option>
+    </optgroup>
+  
+</select>
+
             </div>
 
             <div class="candidate-field">

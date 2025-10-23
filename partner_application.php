@@ -6,7 +6,7 @@ session_start();
 $page_title = "ANU Hospitality Staff Ltd - Partner Application";
 
 // Include header
-include('includes/header.php');
+include('includes/application_header.php');
 ?>
 
 <main>

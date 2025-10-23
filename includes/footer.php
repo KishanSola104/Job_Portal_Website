@@ -121,5 +121,68 @@
 
 
 
+<!-- Contact Us Form validations  -->
+<script>
+document.querySelector(".contact-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const mobile = document.getElementById("mobile").value.trim();
+    const message = document.getElementById("message").value.trim();
+
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    const mobilePattern = /^[0-9]{10,15}$/;
+
+    if (name.length < 2) return showMessage("Please enter a valid name.", "error");
+    if (!email.match(emailPattern)) return showMessage("Please enter a valid email.", "error");
+    if (!mobile.match(mobilePattern)) return showMessage("Please enter a valid mobile number (10–15 digits).", "error");
+    if (message.length < 5) return showMessage("Message should be at least 5 characters long.", "error");
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("mobile", mobile);
+    formData.append("message", message);
+
+    fetch("contact_submit.php", { method: "POST", body: formData })
+    .then(res => res.json())
+    .then(data => {
+        showMessage(data.message, data.status);
+        if (data.status === "success") document.querySelector(".contact-form").reset();
+    })
+    .catch(err => showMessage("Network error. Please try again later.", "error"));
+});
+
+function showMessage(text, type) {
+    let msgDiv = document.getElementById("form-message");
+    if (!msgDiv) {
+        msgDiv = document.createElement("div");
+        msgDiv.id = "form-message";
+        msgDiv.style.marginTop = "10px";
+        msgDiv.style.padding = "10px";
+        msgDiv.style.borderRadius = "5px";
+        msgDiv.style.fontWeight = "500";
+        msgDiv.style.transition = "opacity 0.5s ease-in-out";
+        msgDiv.style.opacity = 0;
+        document.querySelector(".contact-form").appendChild(msgDiv);
+    }
+
+    msgDiv.textContent = text;
+    msgDiv.style.backgroundColor = type === "success" ? "#d4edda" : "#f8d7da";
+    msgDiv.style.color = type === "success" ? "#155724" : "#721c24";
+    msgDiv.style.border = type === "success" ? "1px solid #c3e6cb" : "1px solid #f5c6cb";
+
+    setTimeout(() => msgDiv.style.opacity = 1, 50); // fade-in
+    setTimeout(() => {
+        msgDiv.style.opacity = 0; // fade-out
+        setTimeout(() => msgDiv.remove(), 500);
+    }, 5000);
+}
+</script>
+
+
+
+
 </body>
 </html>
