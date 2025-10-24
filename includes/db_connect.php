@@ -11,9 +11,9 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
 } else {
     // Production (Hostinger)
     $servername = "localhost"; // Hostinger uses localhost for MySQL
-    $username   = "your_hostinger_db_username";
-    $password   = "your_hostinger_db_password";
-    $database   = "your_hostinger_db_name";
+    $username   = "u182454130_anuuser";
+    $password   = "anu_hospitality_DB1";
+    $database   = "u182454130_anu";
 }
 
 // Create connection
