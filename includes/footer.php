@@ -7,33 +7,38 @@
     <!-- ==========================
          FOOTER SECTION 1: CONTACT FORM
     =========================== -->
-    <div class="footer-one contact-us" id="contact-us">
-        <div class="contact-us-container">
-            <h3>Contact Us</h3>
-            <p>Have questions? Reach out to us and we’ll get back to you shortly.</p>
-            <form action="contact_submit.php" method="POST" class="contact-form">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" name="name" id="name" placeholder="Your Name" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" placeholder="Your Email" required>
-                </div>
-                <div class="form-group">
-                    <label for="mobile">Mobile Number</label>
-                    <input type="text" name="mobile" id="mobile" placeholder="Your Mobile Number" required>
-                </div>
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea name="message" id="message" rows="5" placeholder="Your Message" required></textarea>
-                </div>
-                <div class="form-group submit-btn">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
-        </div>
+   <!-- ==========================
+     CONTACT US SECTION
+=========================== -->
+<div class="footer-one contact-us" id="contact-us">
+    <div class="contact-us-container">
+        <h3>Contact Us</h3>
+        <p>Have questions? Reach out to us and we’ll get back to you shortly.</p>
+        <form id="contactForm" class="contact-form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" placeholder="Your Name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="Your Email" required>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="text" name="mobile" id="mobile" placeholder="Your Mobile Number" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea name="message" id="message" rows="5" placeholder="Your Message" required></textarea>
+            </div>
+            <div class="form-group submit-btn">
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </div>
+            <div id="form-message"></div> <!-- For JS messages -->
+        </form>
     </div>
+</div>
+
 
     <!-- ==========================
          FOOTER SECTION 2: LINKS & INFO
@@ -123,21 +128,26 @@
 
 <!-- Contact Us Form validations  -->
 <script>
-document.querySelector(".contact-form").addEventListener("submit", function(e) {
+document.getElementById("contactForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
     const name = document.getElementById("name").value.trim();
     const email = document.getElementById("email").value.trim();
     const mobile = document.getElementById("mobile").value.trim();
     const message = document.getElementById("message").value.trim();
+    const submitBtn = this.querySelector("button[type='submit']");
 
     const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
     const mobilePattern = /^[0-9]{10,15}$/;
 
+    // Client-side validation
     if (name.length < 2) return showMessage("Please enter a valid name.", "error");
-    if (!email.match(emailPattern)) return showMessage("Please enter a valid email.", "error");
+    if (!email.match(emailPattern)) return showMessage("Please enter a valid email address.", "error");
     if (!mobile.match(mobilePattern)) return showMessage("Please enter a valid mobile number (10–15 digits).", "error");
     if (message.length < 5) return showMessage("Message should be at least 5 characters long.", "error");
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending...";
 
     const formData = new FormData();
     formData.append("name", name);
@@ -146,40 +156,43 @@ document.querySelector(".contact-form").addEventListener("submit", function(e) {
     formData.append("message", message);
 
     fetch("contact_submit.php", { method: "POST", body: formData })
-    .then(res => res.json())
-    .then(data => {
-        showMessage(data.message, data.status);
-        if (data.status === "success") document.querySelector(".contact-form").reset();
-    })
-    .catch(err => showMessage("Network error. Please try again later.", "error"));
+        .then(res => res.json())
+        .then(data => {
+            showMessage(data.message, data.status);
+            if (data.status === "success") document.getElementById("contactForm").reset();
+        })
+        .catch(err => showMessage("Network error. Please try again later.", "error"))
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Send Message";
+        });
 });
 
 function showMessage(text, type) {
-    let msgDiv = document.getElementById("form-message");
-    if (!msgDiv) {
-        msgDiv = document.createElement("div");
-        msgDiv.id = "form-message";
-        msgDiv.style.marginTop = "10px";
-        msgDiv.style.padding = "10px";
-        msgDiv.style.borderRadius = "5px";
-        msgDiv.style.fontWeight = "500";
-        msgDiv.style.transition = "opacity 0.5s ease-in-out";
-        msgDiv.style.opacity = 0;
-        document.querySelector(".contact-form").appendChild(msgDiv);
+    const msgDiv = document.getElementById("form-message");
+    msgDiv.textContent = text;
+    msgDiv.style.padding = "10px";
+    msgDiv.style.borderRadius = "5px";
+    msgDiv.style.fontWeight = "500";
+    msgDiv.style.marginTop = "10px";
+    msgDiv.style.transition = "opacity 0.5s ease-in-out";
+    msgDiv.style.opacity = 1;
+
+    if (type === "success") {
+        msgDiv.style.backgroundColor = "#d4edda";
+        msgDiv.style.color = "#155724";
+        msgDiv.style.border = "1px solid #c3e6cb";
+    } else {
+        msgDiv.style.backgroundColor = "#f8d7da";
+        msgDiv.style.color = "#721c24";
+        msgDiv.style.border = "1px solid #f5c6cb";
     }
 
-    msgDiv.textContent = text;
-    msgDiv.style.backgroundColor = type === "success" ? "#d4edda" : "#f8d7da";
-    msgDiv.style.color = type === "success" ? "#155724" : "#721c24";
-    msgDiv.style.border = type === "success" ? "1px solid #c3e6cb" : "1px solid #f5c6cb";
-
-    setTimeout(() => msgDiv.style.opacity = 1, 50); // fade-in
-    setTimeout(() => {
-        msgDiv.style.opacity = 0; // fade-out
-        setTimeout(() => msgDiv.remove(), 500);
-    }, 5000);
+    setTimeout(() => { msgDiv.style.opacity = 0; }, 7000);
 }
 </script>
+
+
 
 
 

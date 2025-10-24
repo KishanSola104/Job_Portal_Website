@@ -1,88 +1,70 @@
 <?php
-// Start session if needed
 session_start();
+require_once "includes/db_connect.php";
+require_once "includes/env.php";
 
-// Database connection
-$servername = "localhost";
-$username = "root"; // change if needed
-$password = ""; // change if needed
-$database = "anu_hospitality_staff";
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-$conn = new mysqli($servername, $username, $password, $database);
+$response = ['status' => 'error', 'message' => '❌ Something went wrong.'];
 
-// Check connection
-if ($conn->connect_error) {
-    die(json_encode([
-        'status' => 'error',
-        'message' => 'Database connection failed.'
-    ]));
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name    = trim($_POST['name'] ?? '');
+    $email   = trim($_POST['email'] ?? '');
+    $mobile  = trim($_POST['mobile'] ?? '');
+    $message = trim($_POST['message'] ?? '');
 
-// Sanitize user input
-$name = trim($_POST['name']);
-$email = trim($_POST['email']);
-$mobile = trim($_POST['mobile']);
-$message = trim($_POST['message']);
+    if (strlen($name) < 2 || !filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match('/^[0-9]{10,15}$/', $mobile) || strlen($message) < 5) {
+        $response['message'] = '❌ Invalid input. Please check your entries.';
+    } else {
+        $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, mobile, message) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $name, $email, $mobile, $message);
 
-// Prepared statement for safe insert
-$stmt = $conn->prepare("INSERT INTO contact_messages (name, email, mobile, message) VALUES (?, ?, ?, ?)");
-$stmt->bind_param("ssss", $name, $email, $mobile, $message);
+        if ($stmt->execute()) {
+            require 'PHPMailer/src/Exception.php';
+            require 'PHPMailer/src/PHPMailer.php';
+            require 'PHPMailer/src/SMTP.php';
 
-$response = [];
+            $mail = new PHPMailer(true);
 
-if ($stmt->execute()) {
-    // --- PHPMailer Notification ---
-    use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\Exception;
+            try {
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.hostinger.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = SMTP_USER;
+                $mail->Password   = SMTP_PASS;
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = 587;
 
-    require 'PHPMailer/src/Exception.php';
-    require 'PHPMailer/src/PHPMailer.php';
-    require 'PHPMailer/src/SMTP.php';
+                $mail->setFrom(SMTP_USER, 'ANU Hospitality Staff');
+                $mail->addAddress(SMTP_USER, 'Admin');
+                $mail->addReplyTo($email, $name);
 
-    $mail = new PHPMailer(true);
+                $mail->isHTML(true);
+                $mail->Subject = '📩 New Contact Us Message';
+                $mail->Body    = "
+                    <h2>New Contact Form Submission</h2>
+                    <p><strong>Name:</strong> " . htmlspecialchars($name) . "</p>
+                    <p><strong>Email:</strong> " . htmlspecialchars($email) . "</p>
+                    <p><strong>Mobile:</strong> " . htmlspecialchars($mobile) . "</p>
+                    <p><strong>Message:</strong> " . nl2br(htmlspecialchars($message)) . "</p>
+                    <hr>
+                    <p><strong>Sent At:</strong> " . date('Y-m-d H:i:s') . "</p>
+                ";
 
-    try {
-        $mail->isSMTP();
-        $mail->Host = 'smtp.yourdomain.com'; // replace with your hosting SMTP
-        $mail->SMTPAuth = true;
-        $mail->Username = 'info@anuhospitalitystaff.com'; // your professional email
-        $mail->Password = 'your-email-password'; // email password
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
+                $mail->send();
+            } catch (Exception $e) {
+                error_log("Mailer Error: {$mail->ErrorInfo}");
+            }
 
-        $mail->setFrom('info@anuhospitalitystaff.com', 'ANU Hospitality Staff');
-        $mail->addAddress('info@anuhospitalitystaff.com', 'Admin'); // admin
-        $mail->addReplyTo($email, $name); // reply goes to user
-
-        $mail->isHTML(true);
-        $mail->Subject = 'New Contact Us Message';
-        $mail->Body = "
-            <h2>New Contact Form Submission</h2>
-            <p><strong>Name:</strong> $name</p>
-            <p><strong>Email:</strong> $email</p>
-            <p><strong>Mobile:</strong> $mobile</p>
-            <p><strong>Message:</strong> $message</p>
-            <p><strong>Sent At:</strong> ".date('Y-m-d H:i:s')."</p>
-        ";
-
-        $mail->send();
-    } catch (Exception $e) {
-        error_log("Mailer Error: {$mail->ErrorInfo}");
+            $response['status']  = 'success';
+            $response['message'] = '✅ Thank you for contacting us! We’ll get back to you soon.';
+        }
+        $stmt->close();
     }
-
-    // --- JSON Response for AJAX ---
-    $response['status'] = 'success';
-    $response['message'] = 'Thank you for contacting us! We will get back to you soon.';
-} else {
-    $response['status'] = 'error';
-    $response['message'] = 'Oops! Something went wrong. Please try again later.';
 }
 
-// Close DB connection
-$stmt->close();
 $conn->close();
-
-// Send JSON response
 header('Content-Type: application/json');
 echo json_encode($response);
 exit;

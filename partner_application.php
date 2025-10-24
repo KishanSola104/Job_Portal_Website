@@ -14,7 +14,7 @@ include('includes/application_header.php');
     <div class="partner-container">
       <h2 class="partner-title">Partner Application Form</h2>
 
-      <form id="partner-form" class="partner-form">
+      <form id="partner-form" class="partner-form" action="partner_submit.php" method="POST">
 
         <!-- Company Details -->
         <div class="partner-section">
