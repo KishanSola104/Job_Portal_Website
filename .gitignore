@@ -1,0 +1,6 @@
+*.zip
+*.bmp
+*.pdf
+/uploads/resumes/
+/includes/db_connect.php
+/includes/env.php
