@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+// Suppress notices/warnings that can break JSON
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+
+// Force JSON output
+header('Content-Type: application/json; charset=utf-8');
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -10,11 +16,11 @@ require 'PHPMailer/src/SMTP.php';
 require 'includes/db_connect.php'; // $conn
 require 'includes/env.php';        // SMTP_USER, SMTP_PASS
 
-$response = ['status' => 'error', 'message' => 'Something went wrong!'];
+$response = ['status' => 'error', 'message' => '❌ Something went wrong.'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // --- Sanitize & get POST data ---
+    // --- Sanitize POST data ---
     $company_name   = trim($_POST['company_name'] ?? '');
     $contact_person = trim($_POST['contact_person'] ?? '');
     $email          = trim($_POST['email'] ?? '');
@@ -26,17 +32,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // --- Server-side validation ---
     if (strlen($company_name) < 2) {
-        $response['message'] = 'Company name must be at least 2 characters.';
+        $response['message'] = '❌ Company name must be at least 2 characters.';
     } elseif (!preg_match('/^[a-zA-Z\s]+$/', $contact_person)) {
-        $response['message'] = 'Contact person should contain only letters and spaces.';
+        $response['message'] = '❌ Contact person should contain only letters and spaces.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $response['message'] = 'Invalid email address.';
+        $response['message'] = '❌ Invalid email address.';
     } elseif (!preg_match('/^\+?\d{8,15}$/', $phone)) {
-        $response['message'] = 'Phone number must be 8–15 digits, optional +.';
+        $response['message'] = '❌ Phone number must be 8–15 digits, optional +.';
     } elseif (strlen($address) < 5) {
-        $response['message'] = 'Address is too short.';
+        $response['message'] = '❌ Address is too short.';
     } elseif (strlen($service_type) < 2) {
-        $response['message'] = 'Service type is required.';
+        $response['message'] = '❌ Service type is required.';
     } else {
 
         // --- Insert into database ---
@@ -45,6 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             (company_name, contact_person, email, phone, website, address, service_type, notes)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
+
+        if (!$stmt) {
+            $response['message'] = '❌ Database error: ' . $conn->error;
+            echo json_encode($response);
+            exit;
+        }
+
         $stmt->bind_param(
             "ssssssss",
             $company_name,
@@ -58,45 +71,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if ($stmt->execute()) {
-            $response = ['status' => 'success', 'message' => 'Partner application submitted successfully!'];
+            $response['status']  = 'success';
+            $response['message'] = '✅ Partner application submitted successfully!';
 
             // --- Send email to admin ---
-            try {
-                $mail = new PHPMailer(true);
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.hostinger.com';
-                $mail->SMTPAuth   = true;
-                $mail->Username   = SMTP_USER;
-                $mail->Password   = SMTP_PASS;
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port       = 587;
+            if (!empty(SMTP_USER) && !empty(SMTP_PASS)) {
+                try {
+                    $mail = new PHPMailer(true);
+                    $mail->isSMTP();
+                    $mail->Host       = 'smtp.hostinger.com';
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = SMTP_USER;
+                    $mail->Password   = SMTP_PASS;
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port       = 587;
 
-                $mail->setFrom(SMTP_USER, 'ANU Hospitality Staff');
-                $mail->addAddress(SMTP_USER, 'Admin');
-                $mail->addReplyTo($email, $contact_person);
+                    $mail->setFrom(SMTP_USER, 'ANU Hospitality Staff');
+                    $mail->addAddress(SMTP_USER, 'Admin');
+                    $mail->addReplyTo($email, $contact_person);
 
-                $mail->isHTML(true);
-                $mail->Subject = '📩 New Partner Application Received';
-                $mail->Body    = "
-                    <h3>New Partner Application</h3>
-                    <p><strong>Company Name:</strong> " . htmlspecialchars($company_name) . "</p>
-                    <p><strong>Contact Person:</strong> " . htmlspecialchars($contact_person) . "</p>
-                    <p><strong>Email:</strong> " . htmlspecialchars($email) . "</p>
-                    <p><strong>Phone:</strong> " . htmlspecialchars($phone) . "</p>
-                    <p><strong>Website:</strong> " . htmlspecialchars($website) . "</p>
-                    <p><strong>Address:</strong> " . htmlspecialchars($address) . "</p>
-                    <p><strong>Service Type:</strong> " . htmlspecialchars($service_type) . "</p>
-                    <p><strong>Notes:</strong> " . htmlspecialchars($notes) . "</p>
-                    <hr>
-                    <p><strong>Submitted At:</strong> " . date('Y-m-d H:i:s') . "</p>
-                ";
-                $mail->send();
-            } catch (Exception $e) {
-                error_log("Mailer Error: {$mail->ErrorInfo}");
+                    $mail->isHTML(true);
+                    $mail->Subject = '📩 New Partner Application Received';
+                    $mail->Body    = "
+                        <h3>New Partner Application</h3>
+                        <p><strong>Company Name:</strong> ".htmlspecialchars($company_name)."</p>
+                        <p><strong>Contact Person:</strong> ".htmlspecialchars($contact_person)."</p>
+                        <p><strong>Email:</strong> ".htmlspecialchars($email)."</p>
+                        <p><strong>Phone:</strong> ".htmlspecialchars($phone)."</p>
+                        <p><strong>Website:</strong> ".htmlspecialchars($website)."</p>
+                        <p><strong>Address:</strong> ".htmlspecialchars($address)."</p>
+                        <p><strong>Service Type:</strong> ".htmlspecialchars($service_type)."</p>
+                        <p><strong>Notes:</strong> ".htmlspecialchars($notes)."</p>
+                        <hr>
+                        <p><strong>Submitted At:</strong> ".date('Y-m-d H:i:s')."</p>
+                    ";
+                    $mail->send();
+                } catch (Exception $e) {
+                    error_log("Mailer Error: {$mail->ErrorInfo}");
+                    if (defined('TEST_MODE') && TEST_MODE) {
+                        $response['status'] = 'warning';
+                        $response['message'] .= " ⚠️ Email warning: {$mail->ErrorInfo}";
+                    }
+                }
             }
 
         } else {
-            $response = ['status' => 'error', 'message' => 'Database insert failed!'];
+            $response['message'] = '❌ Database insert failed: '.$stmt->error;
         }
 
         $stmt->close();
@@ -104,6 +124,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $conn->close();
-header('Content-Type: application/json');
+
+// Clean buffer before sending JSON
+if (ob_get_length()) ob_clean();
 echo json_encode($response);
 exit;
+?>

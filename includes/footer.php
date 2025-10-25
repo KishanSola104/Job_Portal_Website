@@ -127,6 +127,7 @@
 
 
 <!-- Contact Us Form validations  -->
+<!-- Contact Us Form validations -->
 <script>
 document.getElementById("contactForm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -158,8 +159,15 @@ document.getElementById("contactForm").addEventListener("submit", function(e) {
     fetch("contact_submit.php", { method: "POST", body: formData })
         .then(res => res.json())
         .then(data => {
-            showMessage(data.message, data.status);
-            if (data.status === "success") document.getElementById("contactForm").reset();
+            // Show message based on status
+            if (data.status === "success") {
+                showMessage(data.message, "success");
+                document.getElementById("contactForm").reset();
+            } else if (data.status === "warning") {
+                showMessage(data.message, "warning");
+            } else {
+                showMessage(data.message, "error");
+            }
         })
         .catch(err => showMessage("Network error. Please try again later.", "error"))
         .finally(() => {
@@ -182,7 +190,11 @@ function showMessage(text, type) {
         msgDiv.style.backgroundColor = "#d4edda";
         msgDiv.style.color = "#155724";
         msgDiv.style.border = "1px solid #c3e6cb";
-    } else {
+    } else if (type === "warning") {
+        msgDiv.style.backgroundColor = "#fff3cd";
+        msgDiv.style.color = "#856404";
+        msgDiv.style.border = "1px solid #ffeeba";
+    } else { // error
         msgDiv.style.backgroundColor = "#f8d7da";
         msgDiv.style.color = "#721c24";
         msgDiv.style.border = "1px solid #f5c6cb";

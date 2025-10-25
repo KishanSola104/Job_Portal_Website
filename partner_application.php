@@ -22,27 +22,27 @@ include('includes/application_header.php');
           <div class="partner-grid">
             <div class="partner-field">
               <label for="partner-company-name">Company Name*</label>
-              <input type="text" id="partner-company-name" name="company_name" required>
+              <input type="text" id="partner-company-name" name="company_name" required placeholder="Your Company Name">
             </div>
             <div class="partner-field">
               <label for="partner-contact-person">Contact Person*</label>
-              <input type="text" id="partner-contact-person" name="contact_person" required>
+              <input type="text" id="partner-contact-person" name="contact_person" required placeholder="John Doe">
             </div>
             <div class="partner-field">
               <label for="partner-email">Email*</label>
-              <input type="email" id="partner-email" name="email" required>
+              <input type="email" id="partner-email" name="email" required placeholder="you@example.com">
             </div>
             <div class="partner-field">
               <label for="partner-phone">Phone*</label>
-              <input type="text" id="partner-phone" name="phone" required>
+              <input type="text" id="partner-phone" name="phone" required placeholder="+123456789">
             </div>
             <div class="partner-field">
               <label for="partner-website">Website</label>
-              <input type="url" id="partner-website" name="website">
+              <input type="url" id="partner-website" name="website" placeholder="https://yourwebsite.com">
             </div>
             <div class="partner-field">
               <label for="partner-address">Address*</label>
-              <textarea id="partner-address" name="address" rows="3" required></textarea>
+              <textarea id="partner-address" name="address" rows="3" required placeholder="Your Address"></textarea>
             </div>
           </div>
         </div>
@@ -53,11 +53,11 @@ include('includes/application_header.php');
           <div class="partner-grid">
             <div class="partner-field">
               <label for="partner-service-type">Type of Service*</label>
-              <input type="text" id="partner-service-type" name="service_type" required>
+              <input type="text" id="partner-service-type" name="service_type" required placeholder="e.g., Catering, Event Management">
             </div>
             <div class="partner-field">
               <label for="partner-notes">Notes / Additional Info</label>
-              <textarea id="partner-notes" name="notes" rows="3"></textarea>
+              <textarea id="partner-notes" name="notes" rows="3" placeholder="Any additional information..."></textarea>
             </div>
           </div>
         </div>

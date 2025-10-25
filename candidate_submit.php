@@ -1,19 +1,19 @@
 <?php
+ob_start(); // Start output buffering
 session_start();
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+header('Content-Type: application/json; charset=utf-8');
+
+require_once __DIR__ . "/includes/env.php";
+require_once __DIR__ . "/includes/db_connect.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require_once 'includes/db_connect.php';
-require_once 'includes/env.php'; // SMTP_USER and SMTP_PASS
+$response = ['status' => 'error', 'message' => '❌ Something went wrong.'];
 
-$response = ['status' => 'error', 'message' => 'Something went wrong!'];
-
-// Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // ----------------------------
-    // Sanitize & validate input
-    // ----------------------------
+    // Sanitize input
     $name       = trim($_POST['name'] ?? '');
     $email      = trim($_POST['email'] ?? '');
     $phone      = trim($_POST['phone'] ?? '');
@@ -24,123 +24,100 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $month      = intval($_POST['dob_month'] ?? 0);
     $day        = intval($_POST['dob_day'] ?? 0);
 
-    // Allowed job roles
-    $allowed_jobs = [
-        "Housekeeping","HousekeepingSupervisor","Laundry","Maintenance",
-        "FrontDesk","Receptionist","Concierge",
-        "Kitchen","ChefSpecialist","RestaurantService","BarStaff","RoomService",
-        "Event","EventCoordinator","Security",
-        "HotelManagement","AdminStaff","HR","Marketing","Other"
-    ];
-
-    if (
-        strlen($name) < 2 ||
-        !filter_var($email, FILTER_VALIDATE_EMAIL) ||
-        !preg_match('/^\+?\d{8,15}$/', $phone) ||
-        $year < 1900 || $month < 1 || $month > 12 || $day < 1 || $day > 31 ||
-        strlen($address) < 5 ||
-        empty($job_role) || !in_array($job_role, $allowed_jobs) ||
-        $experience < 0
-    ) {
-        echo json_encode(['status'=>'error','message'=>'Invalid input data!']);
+    // Validate resume
+    if (!isset($_FILES['resume']) || $_FILES['resume']['error'] != 0) {
+        echo json_encode(['status'=>'error','message'=>'❌ Upload your resume!']);
         exit;
     }
 
-    $dob = sprintf('%04d-%02d-%02d', $year, $month, $day);
+    // Server-side validation
+    if (strlen($name)<2 || !filter_var($email,FILTER_VALIDATE_EMAIL) || !preg_match('/^\+?\d{8,15}$/',$phone)) {
+        $response['message'] = '❌ Invalid personal information.';
+    } elseif(strlen($address)<5) {
+        $response['message'] = '❌ Address too short.';
+    } elseif(empty($job_role)) {
+        $response['message'] = '❌ Select a job role.';
+    } elseif($experience<0) {
+        $response['message'] = '❌ Invalid experience.';
+    } elseif(!$year || !$month || !$day) {
+        $response['message'] = '❌ Select complete DOB.';
+    } else {
 
-    // ----------------------------
-    // Resume Upload
-    // ----------------------------
-    $uploadDir = __DIR__ . '/uploads/resumes/';
-    if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true); // safer permissions
+        $resume_name = time() . "_" . basename($_FILES['resume']['name']);
+        $resume_path = __DIR__ . "/uploads/resumes/" . $resume_name;
 
-    if (!isset($_FILES['resume'])) {
-        echo json_encode(['status'=>'error','message'=>'Resume file missing!']);
-        exit;
-    }
-
-    $resume = $_FILES['resume'];
-    $allowedExt = ['pdf','doc','docx'];
-    $ext = strtolower(pathinfo($resume['name'], PATHINFO_EXTENSION));
-
-    if (!in_array($ext, $allowedExt)) {
-        echo json_encode(['status'=>'error','message'=>'Invalid resume format!']);
-        exit;
-    }
-
-    if ($resume['size'] > 5*1024*1024) {
-        echo json_encode(['status'=>'error','message'=>'Resume exceeds 5MB!']);
-        exit;
-    }
-
-    // Safe filename: timestamp + sanitized original name
-    $resumeName = 'resume_' . time() . '_' . preg_replace('/[^a-zA-Z0-9_\-\.]/','_', $resume['name']);
-    $destination = $uploadDir . $resumeName;
-
-    if (!move_uploaded_file($resume['tmp_name'], $destination)) {
-        echo json_encode(['status'=>'error','message'=>'Failed to upload resume!']);
-        exit;
-    }
-
-    // Optional: add .htaccess to prevent public access
-    $htaccessFile = $uploadDir . '.htaccess';
-    if (!file_exists($htaccessFile)) {
-        file_put_contents($htaccessFile, "Options -Indexes\n<FilesMatch \"\.(pdf|doc|docx)$\">\nRequire all granted\n</FilesMatch>");
-    }
-
-    // ----------------------------
-    // Insert into DB
-    // ----------------------------
-    $stmt = $conn->prepare("INSERT INTO candidate_applications (name,email,phone,dob,address,job_role,experience,resume) VALUES (?,?,?,?,?,?,?,?)");
-    $stmt->bind_param("ssssssis", $name, $email, $phone, $dob, $address, $job_role, $experience, $resumeName);
-
-    if ($stmt->execute()) {
-        // ----------------------------
-        // Send email notification
-        // ----------------------------
-        try {
-            $mail = new PHPMailer(true);
-            $mail->isSMTP();
-            $mail->Host       = 'smtp.hostinger.com';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = SMTP_USER;
-            $mail->Password   = SMTP_PASS;
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = 587;
-
-            $mail->setFrom(SMTP_USER, 'ANU Hospitality Staff');
-            $mail->addAddress(SMTP_USER, 'Admin');
-            $mail->addReplyTo($email, $name);
-            $mail->addAttachment($destination, $resumeName);
-
-            $mail->isHTML(true);
-            $mail->Subject = "New Candidate Application: " . htmlspecialchars($name);
-            $mail->Body = "
-                <h2>New Candidate Application</h2>
-                <p><strong>Name:</strong> ".htmlspecialchars($name)."</p>
-                <p><strong>Email:</strong> ".htmlspecialchars($email)."</p>
-                <p><strong>Phone:</strong> ".htmlspecialchars($phone)."</p>
-                <p><strong>DOB:</strong> $dob</p>
-                <p><strong>Address:</strong> ".htmlspecialchars($address)."</p>
-                <p><strong>Job Role:</strong> ".htmlspecialchars($job_role)."</p>
-                <p><strong>Experience:</strong> $experience years</p>
-                <p>The resume is attached with this email.</p>
-            ";
-            $mail->send();
-        } catch(Exception $e){
-            error_log("Mailer Error: " . $mail->ErrorInfo);
+        if (!move_uploaded_file($_FILES['resume']['tmp_name'], $resume_path)) {
+            echo json_encode(['status'=>'error','message'=>'❌ Failed to upload resume.']);
+            exit;
         }
 
-        $response = ['status'=>'success','message'=>'✅ Application submitted successfully!'];
-    } else {
-        $response = ['status'=>'error','message'=>'Database insert failed!'];
-    }
+        $dob = sprintf("%04d-%02d-%02d", $year, $month, $day);
 
-    $stmt->close();
+        $stmt = $conn->prepare("INSERT INTO candidate_applications (name,email,phone,dob,address,job_role,experience,resume) VALUES (?,?,?,?,?,?,?,?)");
+        if (!$stmt) {
+            echo json_encode(['status'=>'error','message'=>'❌ Database error: '.$conn->error]);
+            exit;
+        }
+
+        $stmt->bind_param("ssssssis",$name,$email,$phone,$dob,$address,$job_role,$experience,$resume_name);
+
+        if($stmt->execute()){
+            $response['status'] = 'success';
+            $response['message'] = '✅ Your application has been submitted successfully!';
+
+            // Send email (if configured)
+            if(!empty(SMTP_USER) && !empty(SMTP_PASS)){
+                require __DIR__ . '/PHPMailer/src/Exception.php';
+                require __DIR__ . '/PHPMailer/src/PHPMailer.php';
+                require __DIR__ . '/PHPMailer/src/SMTP.php';
+
+                $mail = new PHPMailer(true);
+                try {
+                    $mail->isSMTP();
+                    $mail->Host       = 'smtp.hostinger.com';
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = SMTP_USER;
+                    $mail->Password   = SMTP_PASS;
+                    $mail->SMTPSecure = 'tls';
+                    $mail->Port       = 587;
+                    $mail->SMTPDebug  = 0; // important: disable debug output
+
+                    $mail->setFrom(SMTP_USER,'ANU Hospitality Staff');
+                    $mail->addAddress(ADMIN_EMAIL,'Admin');
+                    $mail->addReplyTo($email,$name);
+
+                    $mail->isHTML(true);
+                    $mail->Subject = '📩 New Candidate Application';
+                    $mail->Body    = "
+                        <h2>New Candidate Application</h2>
+                        <p><strong>Name:</strong> ".htmlspecialchars($name)."</p>
+                        <p><strong>Email:</strong> ".htmlspecialchars($email)."</p>
+                        <p><strong>Phone:</strong> ".htmlspecialchars($phone)."</p>
+                        <p><strong>Address:</strong> ".htmlspecialchars($address)."</p>
+                        <p><strong>Job Role:</strong> ".htmlspecialchars($job_role)."</p>
+                        <p><strong>Experience:</strong> ".htmlspecialchars($experience)." years</p>
+                        <p><strong>Date of Birth:</strong> ".htmlspecialchars($dob)."</p>
+                        <p><strong>Resume:</strong> ".htmlspecialchars($resume_name)."</p>
+                        <hr>
+                        <p><strong>Submitted At:</strong> ".date('Y-m-d H:i:s')."</p>
+                    ";
+                    $mail->send();
+                } catch(Exception $e){
+                    error_log("Mailer Error: {$mail->ErrorInfo}");
+                    $response['message'] .= " ⚠️ Email sending failed.";
+                }
+            }
+
+        } else {
+            $response['message'] = '⚠️ Failed to save application. '.$stmt->error;
+        }
+
+        $stmt->close();
+    }
 }
 
 $conn->close();
-header('Content-Type: application/json');
+if(ob_get_length()) ob_end_clean(); // remove any accidental output
 echo json_encode($response);
 exit;
 ?>
