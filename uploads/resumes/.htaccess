@@ -1,4 +1,0 @@
-Options -Indexes
-<FilesMatch "\.(pdf|doc|docx)$">
-Require all granted
-</FilesMatch>
