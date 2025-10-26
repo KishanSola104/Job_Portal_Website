@@ -139,7 +139,9 @@ document.getElementById("contactForm").addEventListener("submit", function(e) {
     const submitBtn = this.querySelector("button[type='submit']");
 
     const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-    const mobilePattern = /^[0-9]{10,15}$/;
+    // Allow optional + at start, digits, spaces, total digits 10–15
+    const mobilePattern = /^\+?\s*(?:\d\s*){10,15}$/;
+
 
     // Client-side validation
     if (name.length < 2) return showMessage("Please enter a valid name.", "error");

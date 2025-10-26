@@ -30,7 +30,7 @@ include('includes/application_header.php');
 
             <div class="candidate-field">
               <label for="candidate-phone">Phone *</label>
-              <input type="text" id="candidate-phone" name="phone" placeholder="+911234567890" required>
+              <input type="text" id="candidate-phone" name="phone" placeholder="1234567890" required>
             </div>
 
             <div class="candidate-field candidate-dob">

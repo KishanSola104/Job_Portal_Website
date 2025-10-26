@@ -1,11 +1,16 @@
 <?php
-ob_start(); // Start output buffering
+// ============================
+// Candidate Application Submit
+// ============================
+
+ob_start(); // start output buffering
 session_start();
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . "/includes/env.php";
 require_once __DIR__ . "/includes/db_connect.php";
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -13,7 +18,9 @@ $response = ['status' => 'error', 'message' => '❌ Something went wrong.'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    // -------------------------
     // Sanitize input
+    // -------------------------
     $name       = trim($_POST['name'] ?? '');
     $email      = trim($_POST['email'] ?? '');
     $phone      = trim($_POST['phone'] ?? '');
@@ -24,26 +31,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $month      = intval($_POST['dob_month'] ?? 0);
     $day        = intval($_POST['dob_day'] ?? 0);
 
+    // -------------------------
     // Validate resume
+    // -------------------------
     if (!isset($_FILES['resume']) || $_FILES['resume']['error'] != 0) {
         echo json_encode(['status'=>'error','message'=>'❌ Upload your resume!']);
         exit;
     }
 
+    // -------------------------
+    // Clean phone
+    // -------------------------
+    $phone_clean = preg_replace('/\s+/', '', $phone);
+
+    // -------------------------
     // Server-side validation
-    if (strlen($name)<2 || !filter_var($email,FILTER_VALIDATE_EMAIL) || !preg_match('/^\+?\d{8,15}$/',$phone)) {
-        $response['message'] = '❌ Invalid personal information.';
-    } elseif(strlen($address)<5) {
+    // -------------------------
+    if (strlen($name) < 2 || !filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match('/^\+?\s*(?:\d\s*){10,15}$/', $phone)) {
+        $response['message'] = '❌ Invalid personal information. Enter 10–15 digits, spaces and + allowed.';
+    } elseif(strlen($address) < 5) {
         $response['message'] = '❌ Address too short.';
     } elseif(empty($job_role)) {
         $response['message'] = '❌ Select a job role.';
-    } elseif($experience<0) {
+    } elseif($experience < 0) {
         $response['message'] = '❌ Invalid experience.';
     } elseif(!$year || !$month || !$day) {
         $response['message'] = '❌ Select complete DOB.';
     } else {
 
-        $resume_name = time() . "_" . basename($_FILES['resume']['name']);
+        // -------------------------
+        // Handle resume upload
+        // -------------------------
+        $resume_name = time() . "_" . preg_replace('/[^a-zA-Z0-9_\.-]/','',basename($_FILES['resume']['name']));
         $resume_path = __DIR__ . "/uploads/resumes/" . $resume_name;
 
         if (!move_uploaded_file($_FILES['resume']['tmp_name'], $resume_path)) {
@@ -53,20 +72,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $dob = sprintf("%04d-%02d-%02d", $year, $month, $day);
 
+        // -------------------------
+        // Insert into database
+        // -------------------------
         $stmt = $conn->prepare("INSERT INTO candidate_applications (name,email,phone,dob,address,job_role,experience,resume) VALUES (?,?,?,?,?,?,?,?)");
         if (!$stmt) {
             echo json_encode(['status'=>'error','message'=>'❌ Database error: '.$conn->error]);
             exit;
         }
 
-        $stmt->bind_param("ssssssis",$name,$email,$phone,$dob,$address,$job_role,$experience,$resume_name);
+        $stmt->bind_param("ssssssis", $name, $email, $phone_clean, $dob, $address, $job_role, $experience, $resume_name);
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
             $response['status'] = 'success';
             $response['message'] = '✅ Your application has been submitted successfully!';
 
-            // Send email (if configured)
-            if(!empty(SMTP_USER) && !empty(SMTP_PASS)){
+            // -------------------------
+            // Send email notification
+            // -------------------------
+            if (!empty(SMTP_USER) && !empty(SMTP_PASS)) {
+
                 require __DIR__ . '/PHPMailer/src/Exception.php';
                 require __DIR__ . '/PHPMailer/src/PHPMailer.php';
                 require __DIR__ . '/PHPMailer/src/SMTP.php';
@@ -80,11 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mail->Password   = SMTP_PASS;
                     $mail->SMTPSecure = 'tls';
                     $mail->Port       = 587;
-                    $mail->SMTPDebug  = 0; // important: disable debug output
+                    $mail->SMTPDebug  = 0;
 
-                    $mail->setFrom(SMTP_USER,'ANU Hospitality Staff');
-                    $mail->addAddress(ADMIN_EMAIL,'Admin');
-                    $mail->addReplyTo($email,$name);
+                    $mail->setFrom(SMTP_USER, 'ANU Hospitality Staff');
+                    $mail->addAddress(ADMIN_EMAIL, 'Admin');
+                    $mail->addReplyTo($email, $name);
 
                     $mail->isHTML(true);
                     $mail->Subject = '📩 New Candidate Application';
@@ -102,7 +127,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p><strong>Submitted At:</strong> ".date('Y-m-d H:i:s')."</p>
                     ";
                     $mail->send();
-                } catch(Exception $e){
+
+                } catch (Exception $e) {
+                    // Log error instead of breaking JSON
                     error_log("Mailer Error: {$mail->ErrorInfo}");
                     $response['message'] .= " ⚠️ Email sending failed.";
                 }
@@ -117,7 +144,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $conn->close();
-if(ob_get_length()) ob_end_clean(); // remove any accidental output
+
+// -------------------------
+// Ensure only JSON output
+// -------------------------
+if (ob_get_length()) ob_end_clean();
 echo json_encode($response);
 exit;
 ?>

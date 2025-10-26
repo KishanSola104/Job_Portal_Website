@@ -65,31 +65,39 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Form submit
-  form.addEventListener("submit",(e)=>{
-    e.preventDefault();
-    const formData=new FormData(form);
+  // Form submit
+form.addEventListener("submit",(e)=>{
+  e.preventDefault();
+  const phone = document.getElementById("candidate-phone").value.trim();
+  const phonePattern = /^\+?\s*(?:\d\s*){10,15}$/;
 
-    submitBtn.disabled=true;
-    submitBtn.textContent="Submitting...";
+  if (!phone.match(phonePattern)) {
+    showMessage("Invalid phone number. Enter 10–15 digits, spaces and + allowed.","error",document.getElementById("candidate-phone"));
+    return;
+  }
 
-    fetch("candidate_submit.php",{method:"POST",body:formData})
-    .then(res=>res.json())
-    .then(data=>{
-      if(data.status==="success"){
-        showMessage(data.message,"success");
-        form.reset();
-        daySelect.innerHTML="<option value=''>Day</option>";
-      } else {
-        showMessage(data.message,"error");
-      }
-      submitBtn.disabled=false;
-      submitBtn.textContent="Submit";
-    })
-    .catch(err=>{
-      showMessage("Server error. Check console.","error");
-      console.error(err);
-      submitBtn.disabled=false;
-      submitBtn.textContent="Submit";
-    });
+  const formData=new FormData(form);
+  submitBtn.disabled=true;
+  submitBtn.textContent="Submitting...";
+
+  fetch("candidate_submit.php",{method:"POST",body:formData})
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.status==="success"){
+      showMessage(data.message,"success");
+      form.reset();
+      daySelect.innerHTML="<option value=''>Day</option>";
+    } else {
+      showMessage(data.message,"error");
+    }
+    submitBtn.disabled=false;
+    submitBtn.textContent="Submit";
+  })
+  .catch(err=>{
+    showMessage("Server error. Check console.","error");
+    console.error(err);
+    submitBtn.disabled=false;
+    submitBtn.textContent="Submit";
   });
+});
 });

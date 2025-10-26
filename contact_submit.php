@@ -25,14 +25,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mobile  = trim($_POST['mobile'] ?? '');
     $message = trim($_POST['message'] ?? '');
 
+    // Remove spaces from mobile for DB
+    $mobile_clean = preg_replace('/\s+/', '', $mobile);
+
     // Server-side validation
-    if (strlen($name) < 2 || !filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match('/^[0-9]{10,15}$/', $mobile) || strlen($message) < 5) {
+    if (
+        strlen($name) < 2 || 
+        !filter_var($email, FILTER_VALIDATE_EMAIL) || 
+        !preg_match('/^\+?\s*(?:\d\s*){10,15}$/', $mobile) || 
+        strlen($message) < 5
+    ) {
         $response['message'] = '❌ Invalid input. Please check your entries.';
     } else {
 
         // Insert into database
         $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, mobile, message) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $name, $email, $mobile, $message);
+        $stmt->bind_param("ssss", $name, $email, $mobile_clean, $message);
 
         if ($stmt->execute()) {
 
@@ -85,7 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 } catch (Exception $e) {
                     error_log("Mailer Error: {$mail->ErrorInfo}");
-                    // Show warning to user only in TEST_MODE
                     if (TEST_MODE) {
                         $response['status']  = 'warning';
                         $response['message'] .= " ⚠️ Email warning: {$mail->ErrorInfo}";

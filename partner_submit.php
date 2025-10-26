@@ -1,10 +1,7 @@
 <?php
+ob_start();
 session_start();
-
-// Suppress notices/warnings that can break JSON
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
-
-// Force JSON output
 header('Content-Type: application/json; charset=utf-8');
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -13,14 +10,13 @@ use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
-require 'includes/db_connect.php'; // $conn
-require 'includes/env.php';        // SMTP_USER, SMTP_PASS
+require 'includes/db_connect.php';
+require 'includes/env.php';
 
 $response = ['status' => 'error', 'message' => '❌ Something went wrong.'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // --- Sanitize POST data ---
     $company_name   = trim($_POST['company_name'] ?? '');
     $contact_person = trim($_POST['contact_person'] ?? '');
     $email          = trim($_POST['email'] ?? '');
@@ -30,22 +26,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $service_type   = trim($_POST['service_type'] ?? '');
     $notes          = trim($_POST['notes'] ?? '');
 
-    // --- Server-side validation ---
+    // Remove spaces from phone for DB
+    $phone_clean = preg_replace('/\s+/', '', $phone);
+
+    // Validation
     if (strlen($company_name) < 2) {
         $response['message'] = '❌ Company name must be at least 2 characters.';
     } elseif (!preg_match('/^[a-zA-Z\s]+$/', $contact_person)) {
         $response['message'] = '❌ Contact person should contain only letters and spaces.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $response['message'] = '❌ Invalid email address.';
-    } elseif (!preg_match('/^\+?\d{8,15}$/', $phone)) {
-        $response['message'] = '❌ Phone number must be 8–15 digits, optional +.';
+    } elseif (!preg_match('/^\+?\d{10,15}$/', $phone_clean)) {
+        $response['message'] = '❌ Phone number must be 10–15 digits, optional +.';
     } elseif (strlen($address) < 5) {
         $response['message'] = '❌ Address is too short.';
     } elseif (strlen($service_type) < 2) {
         $response['message'] = '❌ Service type is required.';
     } else {
 
-        // --- Insert into database ---
         $stmt = $conn->prepare("
             INSERT INTO partner_applications 
             (company_name, contact_person, email, phone, website, address, service_type, notes)
@@ -54,8 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$stmt) {
             $response['message'] = '❌ Database error: ' . $conn->error;
-            echo json_encode($response);
-            exit;
+            echo json_encode($response); exit;
         }
 
         $stmt->bind_param(
@@ -63,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $company_name,
             $contact_person,
             $email,
-            $phone,
+            $phone_clean,
             $website,
             $address,
             $service_type,
@@ -74,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response['status']  = 'success';
             $response['message'] = '✅ Partner application submitted successfully!';
 
-            // --- Send email to admin ---
+            // Send email
             if (!empty(SMTP_USER) && !empty(SMTP_PASS)) {
                 try {
                     $mail = new PHPMailer(true);
@@ -87,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mail->Port       = 587;
 
                     $mail->setFrom(SMTP_USER, 'ANU Hospitality Staff');
-                    $mail->addAddress(SMTP_USER, 'Admin');
+                    $mail->addAddress(ADMIN_EMAIL, 'Admin');
                     $mail->addReplyTo($email, $contact_person);
 
                     $mail->isHTML(true);
@@ -108,10 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mail->send();
                 } catch (Exception $e) {
                     error_log("Mailer Error: {$mail->ErrorInfo}");
-                    if (defined('TEST_MODE') && TEST_MODE) {
-                        $response['status'] = 'warning';
-                        $response['message'] .= " ⚠️ Email warning: {$mail->ErrorInfo}";
-                    }
                 }
             }
 
@@ -125,7 +118,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 
-// Clean buffer before sending JSON
 if (ob_get_length()) ob_clean();
 echo json_encode($response);
 exit;

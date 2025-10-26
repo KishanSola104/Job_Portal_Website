@@ -34,7 +34,7 @@ include('includes/application_header.php');
             </div>
             <div class="partner-field">
               <label for="partner-phone">Phone*</label>
-              <input type="text" id="partner-phone" name="phone" required placeholder="+123456789">
+              <input type="text" id="partner-phone" name="phone" required placeholder="1234567890">
             </div>
             <div class="partner-field">
               <label for="partner-website">Website</label>

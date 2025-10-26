@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("partner-submit");
   let msgTimeout;
 
-  // Show message at the bottom
   function showMessage(text, type) {
     let msgDiv = document.getElementById("partner-form-message");
     if (!msgDiv) {
@@ -15,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
       msgDiv.style.padding = "10px";
       msgDiv.style.borderRadius = "5px";
       msgDiv.style.fontWeight = "500";
-      form.appendChild(msgDiv); // append at the bottom
+      form.appendChild(msgDiv);
     }
     msgDiv.textContent = text;
     msgDiv.style.backgroundColor = type === "success" ? "#d4edda" : "#f8d7da";
@@ -29,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // Get and trim form values
     const companyName   = form.company_name.value.trim();
     const contactPerson = form.contact_person.value.trim();
     const email         = form.email.value.trim();
@@ -42,12 +40,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Frontend validation
     if (!companyName || !contactPerson || !email || !phone || !address || !serviceType) {
-      showMessage("Please fill all required fields!", "error"); return;
+      showMessage("Please fill all required fields!", "error");
+      return;
     }
-    if (!/^[a-zA-Z\s]+$/.test(contactPerson)) { showMessage("Contact Person should contain only letters!", "error"); return; }
-    if (!/^[^@]+@[^@]+\.[^@]+$/.test(email)) { showMessage("Invalid email address!", "error"); return; }
-    if (!/^\+?\d{8,15}$/.test(phone)) { showMessage("Invalid phone number! Must be 8–15 digits, optional +", "error"); return; }
-    if (!terms) { showMessage("Please accept Terms & Conditions!", "error"); return; }
+    if (!/^[a-zA-Z\s]+$/.test(contactPerson)) {
+      showMessage("Contact Person should contain only letters!", "error");
+      return;
+    }
+    if (!/^[^@]+@[^@]+\.[^@]+$/.test(email)) {
+      showMessage("Invalid email address!", "error");
+      return;
+    }
+
+    // Global phone validation: allow +, spaces, 10–15 digits
+    if (!/^\+?\s*(?:\d\s*){10,15}$/.test(phone)) {
+      showMessage("Invalid phone number. Enter 10–15 digits, spaces and + allowed.", "error");
+      return;
+    }
+
+    if (!terms) {
+      showMessage("Please accept Terms & Conditions!", "error");
+      return;
+    }
 
     submitBtn.disabled = true;
     submitBtn.textContent = "Submitting...";
@@ -55,25 +69,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(form);
 
     fetch("partner_submit.php", { method: "POST", body: formData })
-      .then(res => res.text())
-      .then(text => {
-        try {
-          const data = JSON.parse(text);
-          if (data.status === "success") {
-            showMessage(data.message + " We will get back to you shortly.", "success");
-            form.reset();
-          } else {
-            showMessage(data.message, "error");
-          }
-        } catch (err) {
-          showMessage("Unexpected server response. Check console.", "error");
-          console.error("JSON Parse Error:", err, "Response Text:", text);
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "success") {
+          showMessage(data.message, "success");
+          form.reset();
+        } else {
+          showMessage(data.message, "error");
         }
         submitBtn.disabled = false;
         submitBtn.textContent = "Submit";
       })
       .catch(err => {
-        showMessage("Network error. Try again later.", "error");
+        showMessage("Server error. Check console.", "error");
         console.error(err);
         submitBtn.disabled = false;
         submitBtn.textContent = "Submit";
