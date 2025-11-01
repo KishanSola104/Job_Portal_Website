@@ -12,25 +12,49 @@ if (!isset($page_title)) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($page_title); ?></title>
+     <meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Meta for SEO -->
-    <meta name="description" content="Anu Hospitality Staff Ltd provides professional staffing solutions for the UK hospitality industry.">
-    <meta name="robots" content="index, follow">
-    <link rel="icon" type="image/png" href="assets/logos/favicon.png">
+<title><?php echo htmlspecialchars($page_title); ?> | ANU Hospitality Staff Ltd</title>
+
+<!-- Primary Meta -->
+<meta name="description" content="<?php echo $meta_description ?? 'Hire professional domestic cleaners, hospitality staff, kitchen porters, chefs, and housekeeping staff across the UK. Reliable, trained, and professional service.'; ?>">
+<meta name="keywords" content="hospitality staff UK, domestic cleaners UK, kitchen porters, chefs for hire, housekeeping services UK, ANU Hospitality Staff Ltd">
+<meta name="author" content="ANU Hospitality Staff Ltd">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph (For Social Sharing / LinkedIn / Facebook) -->
+<meta property="og:title" content="<?php echo htmlspecialchars($page_title); ?> | ANU Hospitality Staff Ltd">
+<meta property="og:description" content="<?php echo $meta_description ?? 'We supply trained and reliable staff across the UK hospitality industry.'; ?>">
+<meta property="og:image" content="https://anuhospitalitystaff.com/assets/logos/Final%20Logo.png">
+<meta property="og:url" content="https://anuhospitalitystaff.com">
+<meta property="og:type" content="website">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<?php echo htmlspecialchars($page_title); ?> | ANU Hospitality Staff Ltd">
+<meta name="twitter:description" content="<?php echo $meta_description ?? 'Premium hospitality staffing and cleaning services in the UK.'; ?>">
+<meta name="twitter:image" content="https://anuhospitalitystaff.com/assets/logos/Final%20Logo.png">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="assets/logos/favicon.webp">
 
     <!-- Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.rel='stylesheet'">
+<noscript>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</noscript>
+
+
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/css/footer.css">
-    <link rel="stylesheet" href="assets/css/style.css"> <!-- Global stylesheet -->
-    <link rel="stylesheet" href="assets/css/policy.css"> <!-- Privacy Policy specific stylesheet -->
-    <link rel="stylesheet" href="assets/css/candidate_application.css"> <!-- Application specific stylesheet -->
-    <link rel="stylesheet" href="assets/css/partner_application.css"> <!-- Partner Application specific stylesheet -->
+    <link rel="stylesheet" href="assets/css/min_css/header_min.css">
+  <!--    <link rel="stylesheet" href="assets/css/all_in_one.min.css">
+     <link rel="stylesheet" href="assets/css/all_application.css"> -->
+    
 </head>
 <body>
 
@@ -56,17 +80,18 @@ if (!isset($page_title)) {
             <nav class="main-nav">
         <ul>
   <li><a href="/Job_Portal_Website/#hero">Home</a></li>
-  <li><a href="/Job_Portal_Website/#about-us">About Us</a></li>
-  <li><a href="/Job_Portal_Website/#services">Services</a></li>
-  <li><a href="/Job_Portal_Website/#jobs">Job Roles</a></li>
-  <li><a href="/Job_Portal_Website/#contact-us">Contact Us</a></li>
+  <li><a href="/Job_Portal_Website/#about-us">About</a></li>
+   <li><a href="domestic">Domestic</a></li>
+  <li><a href="commercial">Commercial</a></li>
+  <li><a href="vacancies">Vacancies</a></li>
+  <li><a href="#contact-us">Contact</a></li>
 </ul>
 
             </nav>
 
             <div class="nav-buttons">
-                <a href="candidate_application" class="btn btn-primary">Apply Now</a>
-                <a href="partner_application" class="btn btn-secondary">Join Us</a>
+                <a href="choose-type" class="btn btn-primary">Book Services</a>
+                <a href="userDashboard" class="btn btn-secondary">My Account</a>
             </div>
         </div>
     </div>
@@ -90,17 +115,18 @@ if (!isset($page_title)) {
 
            <ul>
   <li><a href="/Job_Portal_Website/#hero">Home</a></li>
-  <li><a href="/Job_Portal_Website/#about-us">About Us</a></li>
-  <li><a href="/Job_Portal_Website/#services">Services</a></li>
-  <li><a href="/Job_Portal_Website/#jobs">Job Roles</a></li>
-  <li><a href="/Job_Portal_Website/#contact-us">Contact</a></li>
+  <li><a href="/Job_Portal_Website/#about-us">About</a></li>
+ <li><a href="domestic">Domestic</a></li>
+  <li><a href="commercial">Commercial</a></li>
+  <li><a href="vacancies">Vacancies</a></li>
+  <li><a href="#contact-us">Contact</a></li>
 </ul>
 
 
 
             <div class="nav-buttons-mobile">
-                <a href="candidate_application" class="btn btn-primary">Apply Now</a>
-                <a href="partner_application" class="btn btn-secondary">Join Us</a>
+                <a href="choose-type" class="btn btn-primary">Book Services</a>
+                <a href="userDashboard" class="btn btn-secondary">My Account</a>
             </div>
         </nav>
     </div>

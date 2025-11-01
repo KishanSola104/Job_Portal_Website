@@ -2,6 +2,9 @@
 // footer.php - ANU Hospitality
 ?>
 
+<!-- CSS Link -->
+  <link rel="stylesheet" href="assets/css/min_css/footer_min.css"> 
+
 <footer>
 
     <!-- ==========================
@@ -64,6 +67,9 @@
                 <ul>
                     <li><a href="/Job_Portal_Website/#hero">Home</a></li>
                     <li><a href="/Job_Portal_Website/#about-us">About Us</a></li>
+                    <li><a href="domestic">Domestic</a></li>
+                    <li><a href="commercial">Commercial</a></li>
+                    <li><a href="vacancies">Vacancies</a></li>
                     <li><a href="/Job_Portal_Website/#services">Services</a></li>
                     <li><a href="/Job_Portal_Website/#jobs">Job Roles</a></li>
                     <li><a href="#contact-us">Contact Us</a></li>
@@ -72,13 +78,14 @@
 
             <!-- Privacy Links -->
             <div class="footer-column quick-links">
-                <h4>Privacy Links</h4>
+                <h4>Polocy Links</h4>
                 <ul>
     <li><a href="privacy_policy">Privacy Policy</a></li>
     <li><a href="terms_conditions">Terms & Conditions</a></li>
     <li><a href="equal_policy">Equal Opportunities Policy</a></li>
     <li><a href="modern_slavery">Modern Slavery Statement</a></li>
-    <li><a href="ethical_trading">Ethical Trading Policy</a></li>
+    <li><a href="#">Cancellation Policy</a></li>
+    <li><a href="#">Refund Policy</a></li>
 </ul>
 
             </div>
@@ -114,8 +121,8 @@
 </footer>
 
 
-<script src="assets/js/script.js" defer></script>
-<script src="assets/js/policy.js" defer></script>
+<script src="assets/js/min_js/script_min.js" defer></script>
+
 
 
 

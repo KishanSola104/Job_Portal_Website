@@ -9,7 +9,9 @@ $page_title = "ANU Hospitality Staff Ltd - Modern Slavery Statement";
 // Include header
 include('includes/header.php');
  ?>
-
+ 
+ <!-- CSS Link -->
+  <link rel="stylesheet" href="assets/css/min_css/policy_min.css">
 <main>
   <!-- Modern Slavery Statement Section -->
   <section class="modern-slavery-section">
@@ -55,6 +57,10 @@ include('includes/header.php');
   </section>
 </main>
 
+
+
+<!-- JS File -->
+<script src="assets/js/min_js/policy_min.js" defer></script>
 
 <?php 
 // Include footer

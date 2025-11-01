@@ -337,8 +337,11 @@ footer {
 /* Social Links Container */
 .footer-column.social-links .social-icons {
     display: flex;
+    justify-content: center; 
     gap: 15px;
+    flex-wrap: wrap; 
 }
+
 
 /* Default Icon Style */
 .footer-column.social-links .social-icons a i {

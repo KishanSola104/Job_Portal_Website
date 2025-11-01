@@ -151,4 +151,21 @@ document.addEventListener('DOMContentLoaded', () => {
   );
   fadeElements.forEach(el => fadeObserver.observe(el));
 
+
+  
+ /* Why Choose us  */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+    }
+  });
+});
+
+const slideRight = document.querySelector('.slide-from-right');
+if (slideRight) {
+  observer.observe(slideRight);
+}
+
+
 });

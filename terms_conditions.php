@@ -10,6 +10,9 @@ $page_title = "ANU Hospitality Staff Ltd - Terms and Conditions";
 include('includes/header.php');
  ?>
 
+<!-- CSS Link -->
+  <link rel="stylesheet" href="assets/css/min_css/policy_min.css">
+
 <main class="terms-main">
     <section class="terms-section">
         <div class="container">
@@ -68,6 +71,8 @@ include('includes/header.php');
     </section>
 </main>
 
+<!-- JS File -->
+<script src="assets/js/min_js/policy_min.js" defer></script>
 
 <?php 
 // Include footer

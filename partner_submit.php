@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $service_type   = trim($_POST['service_type'] ?? '');
     $notes          = trim($_POST['notes'] ?? '');
 
-    // Remove spaces from phone for DB
+    // Clean phone
     $phone_clean = preg_replace('/\s+/', '', $phone);
 
     // Validation
@@ -68,10 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if ($stmt->execute()) {
+
             $response['status']  = 'success';
             $response['message'] = '✅ Partner application submitted successfully!';
 
-            // Send email
+            // Send admin notification email
             if (!empty(SMTP_USER) && !empty(SMTP_PASS)) {
                 try {
                     $mail = new PHPMailer(true);
@@ -89,20 +90,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $mail->isHTML(true);
                     $mail->Subject = '📩 New Partner Application Received';
-                    $mail->Body    = "
-                        <h3>New Partner Application</h3>
-                        <p><strong>Company Name:</strong> ".htmlspecialchars($company_name)."</p>
-                        <p><strong>Contact Person:</strong> ".htmlspecialchars($contact_person)."</p>
-                        <p><strong>Email:</strong> ".htmlspecialchars($email)."</p>
-                        <p><strong>Phone:</strong> ".htmlspecialchars($phone)."</p>
-                        <p><strong>Website:</strong> ".htmlspecialchars($website)."</p>
-                        <p><strong>Address:</strong> ".htmlspecialchars($address)."</p>
-                        <p><strong>Service Type:</strong> ".htmlspecialchars($service_type)."</p>
-                        <p><strong>Notes:</strong> ".htmlspecialchars($notes)."</p>
-                        <hr>
-                        <p><strong>Submitted At:</strong> ".date('Y-m-d H:i:s')."</p>
-                    ";
+
+                    $adminLoginUrl = "https://anuhospitalitystaff.com/admin/login.php";
+                    $submittedAt   = date('Y-m-d H:i:s');
+
+                    $mail->Body = <<<HTML
+<h3>New Partner Application</h3>
+<p><strong>Company Name:</strong> {$company_name}</p>
+<p><strong>Contact Person:</strong> {$contact_person}</p>
+<p><strong>Email:</strong> {$email}</p>
+<p><strong>Phone:</strong> {$phone}</p>
+<p><strong>Website:</strong> {$website}</p>
+<p><strong>Address:</strong> {$address}</p>
+<p><strong>Service Type:</strong> {$service_type}</p>
+<p><strong>Notes:</strong> {$notes}</p>
+
+<hr>
+<p><strong>Submitted At:</strong> {$submittedAt}</p>
+
+<a href="{$adminLoginUrl}" target="_blank" style="
+    display:inline-block;
+    margin-top:10px;
+    padding:10px 16px;
+    background:#004080;
+    color:#fff;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:600;">
+-> Open Admin Panel
+</a>
+HTML;
+
                     $mail->send();
+
                 } catch (Exception $e) {
                     error_log("Mailer Error: {$mail->ErrorInfo}");
                 }

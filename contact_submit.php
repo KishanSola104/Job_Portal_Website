@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response['status']  = 'success';
             $response['message'] = '✅ Thank you for contacting us! We’ll get back to you soon.';
 
-            // Send email only if SMTP credentials exist
+            // Send email only if SMTP exists
             if (!empty(SMTP_USER) && !empty(SMTP_PASS)) {
 
                 require __DIR__ . '/PHPMailer/src/Exception.php';
@@ -65,13 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mail->SMTPSecure = 'tls';
                     $mail->Port       = 587;
 
-                    // Optional: enable debug while testing
-                    if (TEST_MODE) {
-                        $mail->SMTPDebug = 2;
-                        $mail->Debugoutput = 'html';
-                    } else {
-                        $mail->SMTPDebug = 0;
-                    }
+                    // Debug only if testing
+                    $mail->SMTPDebug = TEST_MODE ? 2 : 0;
 
                     $mail->setFrom(SMTP_USER, 'ANU Hospitality Staff');
                     $mail->addAddress(ADMIN_EMAIL, 'Admin');
@@ -79,15 +74,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $mail->isHTML(true);
                     $mail->Subject = '📩 New Contact Us Message';
-                    $mail->Body    = "
-                        <h2>New Contact Form Submission</h2>
-                        <p><strong>Name:</strong> " . htmlspecialchars($name) . "</p>
-                        <p><strong>Email:</strong> " . htmlspecialchars($email) . "</p>
-                        <p><strong>Mobile:</strong> " . htmlspecialchars($mobile) . "</p>
-                        <p><strong>Message:</strong> " . nl2br(htmlspecialchars($message)) . "</p>
-                        <hr>
-                        <p><strong>Sent At:</strong> " . date('Y-m-d H:i:s') . "</p>
-                    ";
+
+                    $adminLoginUrl = "https://anuhospitalitystaff.com/admin/login";
+                    $currentTime = date('Y-m-d H:i:s');
+
+                    // ✅ HEREDOC — prevents JSON break issues
+                    $mail->Body = <<<HTML
+<h2>New Contact Form Submission</h2>
+<p><strong>Name:</strong> {$name}</p>
+<p><strong>Email:</strong> {$email}</p>
+<p><strong>Mobile:</strong> {$mobile}</p>
+<p><strong>Message:</strong><br> {$message}</p>
+<hr>
+<p><strong>Sent At:</strong> {$currentTime}</p>
+<p style="margin-top:14px;">
+  🔐 <strong>Admin Panel:</strong><br>
+  <a href="{$adminLoginUrl}" target="_blank" style="color:#0078ff;font-weight:600;">Click here to Login</a>
+</p>
+HTML;
 
                     $mail->send();
 
@@ -110,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 
-// Clear any accidental output before sending JSON
+// Clear accidental output before JSON
 if (ob_get_length()) ob_clean();
 echo json_encode($response);
 exit;

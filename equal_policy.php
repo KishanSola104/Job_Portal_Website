@@ -10,6 +10,9 @@ $page_title = "ANU Hospitality Staff Ltd - Equal Opportunities Policy";
 include('includes/header.php');
  ?>
 
+<!-- CSS Link -->
+  <link rel="stylesheet" href="assets/css/min_css/policy_min.css">
+
 <main>
   <!-- Equal Opportunities Section -->
   <section class="equal-opportunities-section">
@@ -44,6 +47,10 @@ include('includes/header.php');
   </section>
 </main>
 
+
+
+<!-- JS File -->
+<script src="assets/js/min_js/policy_min.js" defer></script>
 
 <?php 
 // Include footer

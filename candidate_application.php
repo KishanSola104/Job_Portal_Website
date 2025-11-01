@@ -5,6 +5,10 @@ $page_title = "ANU Hospitality Staff Ltd - Candidate Application";
 include('includes/application_header.php');
 ?>
 
+<!-- CSS Link -->
+<link rel="stylesheet" href="assets/css/min_css/candidate_application_min.css"> 
+  
+
 <main>
   <section class="candidate-form-section">
     <div class="candidate-container">

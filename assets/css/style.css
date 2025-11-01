@@ -183,8 +183,88 @@
     }
 }
 
+ 
 
 /* End of About Section */
+
+/* Why Choose us  */
+
+/* Why Choose Us Section */
+/* Section Base */
+.why-choose-us {
+  padding: 80px 10%;
+  background: #fff;
+  text-align: center;
+}
+
+.wcu-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #03224c;
+}
+
+.wcu-subtext {
+  max-width: 700px;
+  margin: 0 auto 50px auto;
+  color: #333;
+  font-size: 17px;
+}
+
+/* Boxes */
+.wcu-boxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.wcu-box {
+  background: #f4faff;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #dce8ff;
+  transition: 0.3s ease;
+}
+.wcu-box:hover {
+  transform: translateY(-10px);
+}
+
+.wcu-icon {
+  font-size: 40px;
+  color: #007bff;
+  margin-bottom: 15px;
+}
+
+/* Button */
+.wcu-btn {
+  display: inline-block;
+  padding: 12px 35px;
+  background: #0066ff;
+  color: white;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: 0.3s;
+}
+.wcu-btn:hover {
+  background: #004ccd;
+}
+
+/* SLIDE-IN FROM RIGHT ANIMATION */
+.slide-from-right {
+  opacity: 0;
+  transform: translateX(150px);
+  transition: all 0.8s ease-out;
+}
+
+.slide-from-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
+
+/* End of Why Choose us */
 
 
 
@@ -363,6 +443,10 @@
   text-align: center;
 }
 
+.services-section a {
+  text-decoration: none;
+}
+
 .section-title {
   color: #0056b3;
   font-size: 2.5rem;
@@ -465,6 +549,40 @@
   transform: scale(1.05);
 }
 
+
+/* View Details Link */
+/* Icon design */
+.overlay-link-icon {
+  display: block;
+  font-size: 28px; /* Bigger */
+  font-weight: bold;
+  margin-bottom: 12px; /* space between icon & text */
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.35s ease;
+  text-align: center;
+}
+
+/* Show on hover */
+.service-card:hover .overlay-link-icon {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Adjust overlay to give space */
+.service-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+
+
+/* En of services section  */
 /* =============================
    👔 JOB ROLES SECTION
 ============================= */

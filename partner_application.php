@@ -9,6 +9,9 @@ $page_title = "ANU Hospitality Staff Ltd - Partner Application";
 include('includes/application_header.php');
 ?>
 
+<!-- CSS Link -->
+   <link rel="stylesheet" href="assets/css/min_css/partner_application_min.css"> 
+
 <main>
   <section class="partner-form-section">
     <div class="partner-container">

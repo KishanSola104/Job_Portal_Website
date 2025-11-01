@@ -1,0 +1,1 @@
+document.querySelectorAll(".privacy-section h2").forEach(e=>{e.style.cursor="pointer",e.addEventListener("click",()=>{let l=e.nextElementSibling;for(;l&&"H2"!==l.tagName;)l.style.display="none"===l.style.display?"block":"none",l=l.nextElementSibling})});

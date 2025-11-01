@@ -10,6 +10,9 @@ $page_title = "ANU Hospitality Staff Ltd - Privacy Policy";
 include('includes/header.php');
  ?>
 
+<!-- CSS Link -->
+  <link rel="stylesheet" href="assets/css/min_css/policy_min.css">
+
  <main class="privacy-main">
     <section class="privacy-section">
         <div class="container">
@@ -38,6 +41,9 @@ include('includes/header.php');
     </section>
 </main>
 
+
+<!-- JS File -->
+<script src="assets/js/min_js/policy_min.js" defer></script>
 
 <?php 
 // Include footer

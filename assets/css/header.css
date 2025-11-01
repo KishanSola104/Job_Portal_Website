@@ -317,7 +317,7 @@ body {
     main { padding-top: var(--header-height-tablet); } 
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1200px) {
     .desktop-header { display: none !important; }
     .mobile-header { display: flex !important; }
 
@@ -327,6 +327,7 @@ body {
 
     main { padding-top: var(--header-height-mobile); }
 }
+
 
 @media (max-width: 420px) {
     .mobile-nav { width: 240px; }
